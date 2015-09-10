@@ -7,6 +7,7 @@ const PlayerOrder = require('./player-order');
 const PlayerStatus = require('./player-status');
 const ImageHelpers = require('./image-helpers');
 const PlayerInteraction = require('./player-interaction');
+const HandEvaluator = require('./hand-evaluator');
 
 class TexasHoldem {
   // Public: Creates a new game instance.
@@ -486,11 +487,17 @@ class TexasHoldem {
 
       if (!player.isBot) {
         let dm = this.playerDms[player.id];
+        console.log('cards '+ player.name +': '+ this.playerHands[player.id]);
         dm.send(`Your hand is: ${this.playerHands[player.id]}`);
       } else {
         player.holeCards = this.playerHands[player.id];
       }
     }
+    // get flop, turn, river
+    this.finalBoard = [this.deck.cards[1], this.deck.cards[2], this.deck.cards[3], this.deck.cards[5], this.deck.cards[7]];
+    console.log('Final board: '+ this.finalBoard);
+    let winner = HandEvaluator.evaluateHands(this.orderedPlayers, this.playerHands, this.finalBoard);
+    console.log(winner);
   }
 
   // Private: Creates an image of the cards on board and posts it to the
